@@ -14,21 +14,19 @@ namespace thumbnailMeme
                 return;
             }
 
-            Bitmap inputImage = new Bitmap(args[0]);
-            String outputFolder = args[1];
+            const int thumbnailSize = 90;
+            const int rowWidth = 117;
+            const int colWidth = 110;
 
-            int thumbnailSize = 90;
-            int rowWidth = 117;
-            int colWidth = 110;
+            Bitmap inputImage = resizedImage(new Bitmap(args[0]));
+            String outputFolder = args[1];
 
             for (int rowIndex = 0; rowIndex < 6; rowIndex++)
             {
                 for (int colIndex = 0; colIndex < 6; colIndex++)
                 {
-                    Bitmap tempImage = resizedImage(inputImage);
                     Rectangle cropRectangle = new Rectangle(colIndex * colWidth, rowIndex * rowWidth, thumbnailSize, thumbnailSize);
-
-                    cropRectangle.Intersect(new Rectangle(0, 0, tempImage.Width, tempImage.Height));
+                    cropRectangle.Intersect(new Rectangle(0, 0, inputImage.Width, inputImage.Height));
 
                     if (cropRectangle.IsEmpty)
                     {
@@ -37,7 +35,7 @@ namespace thumbnailMeme
 
                     Bitmap thumbnailImage = new Bitmap(thumbnailSize, thumbnailSize);
                     Graphics graphicImage = Graphics.FromImage(thumbnailImage);
-                    graphicImage.DrawImage(tempImage, new Rectangle(0, 0, cropRectangle.Width, cropRectangle.Height), cropRectangle, GraphicsUnit.Pixel);
+                    graphicImage.DrawImage(inputImage, new Rectangle(0, 0, cropRectangle.Width, cropRectangle.Height), cropRectangle, GraphicsUnit.Pixel);
                     thumbnailImage.Save(outputFolder + @"\" + Convert.ToChar('A' + rowIndex) + (colIndex + 1) + ".png");
                 }
             }
@@ -45,8 +43,8 @@ namespace thumbnailMeme
 
         static Bitmap resizedImage(Bitmap img)
         {
-            int targetWidth = 660;
-            int targetHeight = 702;
+            const int targetWidth = 660;
+            const int targetHeight = 702;
 
             int newWidth;
             int newHeight;
